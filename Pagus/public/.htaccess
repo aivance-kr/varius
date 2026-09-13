@@ -11,3 +11,10 @@
 <IfModule !mod_rewrite.c>
     ErrorDocument 404 index.php
 </IfModule>
+
+# mod_php 환경(FPM/CGI가 아닐 때)에서 PHP 기본 upload_max_filesize(2M)가
+# RestaurantPhotoService::MAX_FILE_SIZE(5MB)보다 작아 업로드가 막히는 문제(#59)를 막는다.
+<IfModule mod_php.c>
+    php_value upload_max_filesize 6M
+    php_value post_max_size 40M
+</IfModule>
