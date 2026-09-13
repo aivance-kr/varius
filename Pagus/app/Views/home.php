@@ -96,7 +96,7 @@ $jsonLd = new \App\Libraries\Seo\JsonLdBuilder($seoConfig, rtrim(base_url(), '/'
 <footer class="site-footer">
     <p>© <?= date('Y') ?> 파구스. All rights reserved.</p>
     <p><a href="mailto:advisor@aivance.kr">advisor@aivance.kr</a></p>
-    <p><a href="<?= site_url('login') ?>">로그인</a></p>
+    <p><a href="<?= session()->get('is_admin') === true ? site_url('admin') : site_url('login') ?>"><?= session()->get('is_admin') === true ? '운영자 메뉴' : '로그인' ?></a></p>
     <p>파구스는 오픈소스 프로젝트입니다. <a href="https://github.com/pushwing/varius/tree/main/Pagus" target="_blank" rel="noopener noreferrer">GitHub에서 소스코드 보기</a></p>
 </footer>
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=<?= esc(config(\Config\KakaoMaps::class)->jsKey, 'url') ?>"></script>
