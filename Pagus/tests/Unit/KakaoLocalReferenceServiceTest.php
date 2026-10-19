@@ -61,7 +61,7 @@ final class KakaoLocalReferenceServiceTest extends TestCase
         ]));
     }
 
-    public function testSearchRequestsPajuAreaAndExcludesOtherAddresses(): void
+    public function testSearchRequestsAllowedAreaAndExcludesOtherAddresses(): void
     {
         $config = self::config();
         $config->apiKey = 'test-api-key';
@@ -71,6 +71,8 @@ final class KakaoLocalReferenceServiceTest extends TestCase
         $response->method('getBody')->willReturn(json_encode([
             'documents' => [
                 ['place_name' => '파주 식당', 'address_name' => '파주시 금촌동 1', 'y' => '37.7', 'x' => '126.7'],
+                ['place_name' => '고양 식당', 'address_name' => '경기 고양시 일산동구 1', 'y' => '37.66', 'x' => '126.77'],
+                ['place_name' => '전곡 식당', 'address_name' => '경기 연천군 전곡읍 1', 'y' => '38.02', 'x' => '127.07'],
                 ['place_name' => '서울 식당', 'address_name' => '서울특별시 종로구 1', 'y' => '37.5', 'x' => '126.9'],
             ],
         ]));
@@ -79,11 +81,11 @@ final class KakaoLocalReferenceServiceTest extends TestCase
         $client->expects(self::once())->method('get')->with(
             $config->endpoint,
             self::callback(static function (array $options): bool {
-                return ($options['query']['rect'] ?? null) === '126.65,37.64,126.98,37.98';
+                return ($options['query']['rect'] ?? null) === '126.65,37.55,127.35,38.30';
             }),
         )->willReturn($response);
 
-        self::assertCount(1, (new KakaoLocalReferenceService($client, $config))->search('식당'));
+        self::assertCount(3, (new KakaoLocalReferenceService($client, $config))->search('식당'));
     }
 
     public function testSearchReturnsNullWhenApiKeyNotConfigured(): void
