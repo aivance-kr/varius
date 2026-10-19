@@ -1,6 +1,6 @@
 ---
 name: 파구스 (Pagus)
-description: 파주 로컬 맛집을 지도와 검증된 후기로 발견하는 서비스
+description: 파주 인근 로컬 맛집을 지도와 검증된 후기로 발견하는 서비스
 colors:
   fern-green: "#206b58"
   pine-shadow: "#173b35"
