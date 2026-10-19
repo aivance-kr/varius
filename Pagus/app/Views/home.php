@@ -23,7 +23,7 @@ $jsonLd = new \App\Libraries\Seo\JsonLdBuilder($seoConfig, rtrim(base_url(), '/'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?= $seo->head(['title' => '파구스 — 파주 로컬 맛집 지도', 'description' => $seoConfig->siteDescription, 'path' => '']) ?>
+    <?= $seo->head(['title' => '파구스 — 파주 인근 로컬 맛집 지도', 'description' => $seoConfig->siteDescription, 'path' => '']) ?>
     <?= $jsonLd->toScriptTag($jsonLd->graph([$jsonLd->website(), $jsonLd->organization(), $jsonLd->itemList($mapRestaurants)])) ?>
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
     <script src="<?= base_url('assets/js/share.js') ?>"></script>
@@ -33,7 +33,7 @@ $jsonLd = new \App\Libraries\Seo\JsonLdBuilder($seoConfig, rtrim(base_url(), '/'
 </head>
 <body>
 <header class="site-header">
-    <h1><img class="brand-mark" src="<?= base_url('assets/img/logo-mark.svg') ?>" alt="">파구스 · 파주 로컬 맛집 지도</h1>
+    <h1><img class="brand-mark" src="<?= base_url('assets/img/logo-mark.svg') ?>" alt="">파구스 · 파주 인근 로컬 맛집 지도</h1>
     <nav aria-label="주요 메뉴">
         <a href="<?= site_url('/') ?>">홈</a>
         <button type="button" class="nav-button" data-contact-open>문의하기</button>
@@ -148,7 +148,7 @@ $jsonLd = new \App\Libraries\Seo\JsonLdBuilder($seoConfig, rtrim(base_url(), '/'
             header.className = 'map-popup__header';
             const kicker = document.createElement('span');
             kicker.className = 'map-popup__kicker';
-            kicker.textContent = '파주 로컬 맛집';
+            kicker.textContent = '파주 인근 로컬 맛집';
             const title = document.createElement('h3');
             title.textContent = restaurant.name;
             header.append(kicker, title);

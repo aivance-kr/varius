@@ -9,7 +9,11 @@ use Config\KakaoLocal;
 
 final class KakaoLocalReferenceService
 {
-    private const PAJU_SEARCH_RECT = '126.65,37.64,126.98,37.98';
+    // 파주·고양·연천(전곡읍 포함)을 아우르는 검색 영역
+    private const SEARCH_RECT = '126.65,37.55,127.35,38.30';
+
+    /** 등록 허용 지역: 주소에 포함돼야 하는 시·군 명칭 */
+    private const ALLOWED_REGIONS = ['파주시', '고양시', '연천군'];
 
     public function __construct(private readonly ?CURLRequest $client = null, private readonly ?KakaoLocal $config = null)
     {
@@ -37,7 +41,7 @@ final class KakaoLocalReferenceService
                 'headers' => ['Authorization' => 'KakaoAK ' . $config->apiKey, 'Accept' => 'application/json'],
                 'query' => [
                     'query' => $query,
-                    'rect' => self::PAJU_SEARCH_RECT,
+                    'rect' => self::SEARCH_RECT,
                     'size' => $config->resultLimit,
                 ],
                 'timeout' => $config->timeout,
@@ -69,7 +73,7 @@ final class KakaoLocalReferenceService
             $name = $document['place_name'] ?? null;
             $roadAddress = $document['road_address_name'] ?? '';
             $address = is_string($roadAddress) && $roadAddress !== '' ? $roadAddress : ($document['address_name'] ?? null);
-            if (! is_string($name) || $name === '' || ! is_string($address) || $address === '' || ! str_contains($address, '파주시') || ! is_numeric($document['y'] ?? null) || ! is_numeric($document['x'] ?? null)) {
+            if (! is_string($name) || $name === '' || ! is_string($address) || $address === '' || ! self::isAllowedRegion($address) || ! is_numeric($document['y'] ?? null) || ! is_numeric($document['x'] ?? null)) {
                 continue;
             }
             $latitude = (float) $document['y'];
@@ -87,5 +91,15 @@ final class KakaoLocalReferenceService
             ];
         }
         return $normalized;
+    }
+
+    private static function isAllowedRegion(string $address): bool
+    {
+        foreach (self::ALLOWED_REGIONS as $region) {
+            if (str_contains($address, $region)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
