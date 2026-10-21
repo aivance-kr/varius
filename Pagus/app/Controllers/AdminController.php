@@ -44,12 +44,27 @@ final class AdminController extends Controller
         $page = filter_var($this->request->getGet('page_admin_restaurants'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) ?: 1;
         $result = $this->management->restaurants((string) $this->request->getGet('q'), $page);
 
-        return view('admin/restaurants', ['restaurants' => $result['restaurants'], 'pager' => $result['pager']]);
+        $listQuery = http_build_query(array_filter([
+            'q' => (string) $this->request->getGet('q'),
+            'page_admin_restaurants' => $page > 1 ? $page : '',
+        ], static fn ($value): bool => $value !== ''));
+
+        return view('admin/restaurants', [
+            'restaurants' => $result['restaurants'],
+            'pager' => $result['pager'],
+            'listUrl' => '/admin' . ($listQuery === '' ? '' : '?' . $listQuery),
+        ]);
+    }
+
+    /** 목록 복귀 URL은 /admin 내부 경로만 허용한다(오픈 리다이렉트 방지). */
+    private function safeListUrl(mixed $url): string
+    {
+        return is_string($url) && preg_match('#^/admin(\?[A-Za-z0-9_=&%.+\-]*)?$#', $url) === 1 ? $url : '/admin';
     }
 
     public function newRestaurant(): string
     {
-        return view('admin/restaurant_form', ['categories' => $this->management->categories(), 'editingRestaurant' => null]);
+        return view('admin/restaurant_form', ['categories' => $this->management->categories(), 'editingRestaurant' => null, 'returnUrl' => '/admin']);
     }
 
     public function editRestaurant(int $id): string|RedirectResponse
@@ -58,7 +73,7 @@ final class AdminController extends Controller
         if ($restaurant === null) {
             return redirect()->to('/admin')->with('error', '맛집을 찾을 수 없습니다.');
         }
-        return view('admin/restaurant_form', ['categories' => $this->management->categories(), 'editingRestaurant' => $restaurant]);
+        return view('admin/restaurant_form', ['categories' => $this->management->categories(), 'editingRestaurant' => $restaurant, 'returnUrl' => $this->safeListUrl($this->request->getGet('return'))]);
     }
 
     public function categories(): string
@@ -98,7 +113,8 @@ final class AdminController extends Controller
     public function saveRestaurant(): RedirectResponse
     {
         $post = $this->request->getPost();
-        $formUrl = ($post['id'] ?? '') === '' ? '/admin/restaurants/new' : "/admin/restaurants/{$post['id']}/edit";
+        $returnUrl = $this->safeListUrl($post['return_to'] ?? null);
+        $formUrl = ($post['id'] ?? '') === '' ? '/admin/restaurants/new' : "/admin/restaurants/{$post['id']}/edit?return=" . rawurlencode($returnUrl);
         $rules = ['name' => 'required|max_length[150]', 'address' => 'required|max_length[255]', 'latitude' => 'required|numeric|greater_than_equal_to[-90]|less_than_equal_to[90]', 'longitude' => 'required|numeric|greater_than_equal_to[-180]|less_than_equal_to[180]', 'phone' => 'permit_empty|max_length[30]', 'homepage_url' => 'permit_empty|valid_url|max_length[2048]', 'description' => 'permit_empty', 'menu' => 'permit_empty', 'business_hours' => 'permit_empty', 'tags' => 'permit_empty|max_length[500]'];
         if (! $this->validate($rules)) {
             return redirect()->to($formUrl)->withInput()->with('error', '맛집 필수값 또는 좌표를 확인하세요.');
@@ -111,13 +127,13 @@ final class AdminController extends Controller
         } catch (InvalidArgumentException $exception) {
             return redirect()->to($formUrl)->withInput()->with('error', $exception->getMessage());
         }
-        return redirect()->to('/admin')->with('message', '맛집을 저장했습니다.');
+        return redirect()->to($returnUrl)->with('message', '맛집을 저장했습니다.');
     }
 
     public function toggleRestaurant(int $id): RedirectResponse
     {
         $this->management->toggleRestaurant($id);
-        return redirect()->to('/admin')->with('message', '맛집 공개 상태를 변경했습니다.');
+        return redirect()->to($this->safeListUrl($this->request->getPost('return_to')))->with('message', '맛집 공개 상태를 변경했습니다.');
     }
 
     public function managePhotos(int $restaurantId): string|RedirectResponse

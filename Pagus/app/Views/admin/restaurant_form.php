@@ -3,6 +3,7 @@
 /**
  * @var list<array<string, mixed>> $categories
  * @var array<string, mixed>|null $editingRestaurant
+ * @var string $returnUrl
  */
 ?>
 <!doctype html>
@@ -27,6 +28,7 @@
             <h1><?= $editingRestaurant === null ? '맛집 등록' : '맛집 수정' ?></h1>
             <form class="form-grid" method="post" action="/admin/restaurants/save">
                 <?= csrf_field() ?>
+                <input type="hidden" name="return_to" value="<?= esc($returnUrl) ?>">
                 <input type="hidden" name="id" value="<?= $editingRestaurant === null ? '' : (int) $editingRestaurant['id'] ?>">
                 <fieldset class="form-section">
                     <legend>기본 정보</legend>
@@ -100,7 +102,7 @@ foreach ($categories as $category): ?>
 
                 <span class="inline-actions">
                     <button type="submit">저장</button>
-                    <a class="btn-ghost" href="/admin">취소</a>
+                    <a class="btn-ghost" href="<?= esc($returnUrl) ?>">취소</a>
                 </span>
             </form>
         </section>

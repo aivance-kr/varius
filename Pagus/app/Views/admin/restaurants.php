@@ -44,9 +44,9 @@
                         <td><span class="badge <?= (int) $restaurant['is_published'] === 1 ? 'badge-on' : 'badge-off' ?>"><?= (int) $restaurant['is_published'] === 1 ? '공개' : '숨김' ?></span></td>
                         <td>
                             <span class="inline-actions">
-                                <a class="btn-ghost btn-sm" href="/admin/restaurants/<?= (int) $restaurant['id'] ?>/edit">수정</a>
+                                <a class="btn-ghost btn-sm" href="/admin/restaurants/<?= (int) $restaurant['id'] ?>/edit?return=<?= rawurlencode($listUrl) ?>">수정</a>
                                 <a class="btn-ghost btn-sm" href="/admin/restaurants/<?= (int) $restaurant['id'] ?>/photos">사진관리</a>
-                                <form class="inline-form" method="post" action="/admin/restaurants/<?= (int) $restaurant['id'] ?>/toggle"><?= csrf_field() ?><button class="btn-ghost btn-sm" type="submit"><?= (int) $restaurant['is_published'] === 1 ? '숨김' : '공개' ?></button></form>
+                                <form class="inline-form" method="post" action="/admin/restaurants/<?= (int) $restaurant['id'] ?>/toggle"><?= csrf_field() ?><input type="hidden" name="return_to" value="<?= esc($listUrl) ?>"><button class="btn-ghost btn-sm" type="submit"><?= (int) $restaurant['is_published'] === 1 ? '숨김' : '공개' ?></button></form>
                             </span>
                         </td>
                     </tr>
