@@ -59,7 +59,7 @@ final class AdminController extends Controller
     /** 목록 복귀 URL은 /admin 내부 경로만 허용한다(오픈 리다이렉트 방지). */
     private function safeListUrl(mixed $url): string
     {
-        return is_string($url) && preg_match('#^/admin(\?[A-Za-z0-9_=&%.+\-]*)?$#', $url) === 1 ? $url : '/admin';
+        return is_string($url) && preg_match('#\A/admin(\?[A-Za-z0-9_=&%.+\-]*)?\z#', $url) === 1 ? $url : '/admin';
     }
 
     public function newRestaurant(): string
@@ -114,7 +114,9 @@ final class AdminController extends Controller
     {
         $post = $this->request->getPost();
         $returnUrl = $this->safeListUrl($post['return_to'] ?? null);
-        $formUrl = ($post['id'] ?? '') === '' ? '/admin/restaurants/new' : "/admin/restaurants/{$post['id']}/edit?return=" . rawurlencode($returnUrl);
+        $rawId = (string) ($post['id'] ?? '');
+        $id = $rawId === '' ? null : (int) $rawId;
+        $formUrl = $id === null ? '/admin/restaurants/new' : "/admin/restaurants/{$id}/edit?return=" . rawurlencode($returnUrl);
         $rules = ['name' => 'required|max_length[150]', 'address' => 'required|max_length[255]', 'latitude' => 'required|numeric|greater_than_equal_to[-90]|less_than_equal_to[90]', 'longitude' => 'required|numeric|greater_than_equal_to[-180]|less_than_equal_to[180]', 'phone' => 'permit_empty|max_length[30]', 'homepage_url' => 'permit_empty|valid_url|max_length[2048]', 'description' => 'permit_empty', 'menu' => 'permit_empty', 'business_hours' => 'permit_empty', 'tags' => 'permit_empty|max_length[500]'];
         if (! $this->validate($rules)) {
             return redirect()->to($formUrl)->withInput()->with('error', '맛집 필수값 또는 좌표를 확인하세요.');
@@ -122,7 +124,6 @@ final class AdminController extends Controller
         $data = array_intersect_key($post, array_flip(['name', 'address', 'latitude', 'longitude', 'phone', 'homepage_url', 'description', 'menu', 'business_hours', 'tags']));
         $data['is_published'] = ((string) $this->request->getPost('is_published')) === '1' ? 1 : 0;
         try {
-            $id = ($post['id'] ?? '') === '' ? null : (int) $post['id'];
             $this->management->saveRestaurant($id, $data, array_map('intval', (array) ($post['category_ids'] ?? [])));
         } catch (InvalidArgumentException $exception) {
             return redirect()->to($formUrl)->withInput()->with('error', $exception->getMessage());
