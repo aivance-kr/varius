@@ -125,6 +125,25 @@ $jsonLd = new \App\Libraries\Seo\JsonLdBuilder($seoConfig, rtrim(base_url(), '/'
             center: new kakao.maps.LatLng(37.7597, 126.7777),
             level: 7
         });
+        // 서비스 지역(파주·연천·고양) 경계만 색을 입힌다
+        fetch('<?= base_url('assets/data/regions.geojson') ?>')
+            .then((response) => response.json())
+            .then((geojson) => {
+                geojson.features.forEach((feature) => {
+                    feature.geometry.coordinates.forEach((polygon) => {
+                        new kakao.maps.Polygon({
+                            map,
+                            path: polygon.map((ring) => ring.map(([lon, lat]) => new kakao.maps.LatLng(lat, lon))),
+                            strokeWeight: 2,
+                            strokeColor: '#e8590c',
+                            strokeOpacity: 0.8,
+                            fillColor: '#e8590c',
+                            fillOpacity: 0.15
+                        });
+                    });
+                });
+            })
+            .catch(() => {});
         const markers = new Map();
         const bounds = new kakao.maps.LatLngBounds();
         let hasBounds = false;
