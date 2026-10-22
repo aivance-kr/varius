@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\SlackInquiryNotifier;
 use App\Services\InquiryService;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\RedirectResponse;
@@ -24,7 +25,15 @@ final class InquiryController extends Controller
             return redirect()->to('/#contact')->withInput()->with('error', '이름과 문의 내용을 확인하세요.');
         }
         try {
-            $this->inquiries->submit($this->request->getPost());
+            $post = $this->request->getPost();
+            $inquiryId = $this->inquiries->submit($post);
+            // 운영 채널 Slack 알림 (실패해도 접수에는 영향 없음)
+            SlackInquiryNotifier::fromEnv('Pagus')->notify($inquiryId, [
+                '이름' => trim((string) ($post['name'] ?? '')),
+                '연락처' => trim((string) ($post['contact'] ?? '')),
+                '접수 시각' => date('Y-m-d H:i:s'),
+                '요청 IP' => $this->request->getIPAddress(),
+            ], trim((string) ($post['message'] ?? '')), base_url('admin/inquiries/' . $inquiryId));
         } catch (InvalidArgumentException $exception) {
             return redirect()->to('/#contact')->withInput()->with('error', $exception->getMessage());
         }
