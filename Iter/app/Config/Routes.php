@@ -6,6 +6,8 @@ use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
 $routes->match(['get', 'head'], '/', 'Home::index');
+$routes->get('robots.txt', 'SeoController::robots');
+$routes->get('sitemap.xml', 'SeoController::sitemap');
 
 // Google OAuth2 인증
 $routes->get('auth/google', 'AuthController::redirect');
