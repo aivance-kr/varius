@@ -63,4 +63,26 @@ final class HomeControllerTest extends CIUnitTestCase
         $this->assertStringNotContainsString('Google로 로그인', $body);
         $this->assertStringNotContainsString('id="takeout-form"', $body);
     }
+
+    public function testLandingHasSeoMetaAndStructuredData(): void
+    {
+        $body = $this->decodedBody($this->get('/'));
+
+        $this->assertStringContainsString('<link rel="canonical"', $body);
+        $this->assertStringContainsString('property="og:title"', $body);
+        $this->assertStringContainsString('name="twitter:card"', $body);
+        $this->assertStringContainsString('"@type":"FAQPage"', $body);
+        $this->assertStringContainsString('"@type":"WebApplication"', $body);
+    }
+
+    public function testRobotsAndSitemapAreServed(): void
+    {
+        $robots = $this->get('robots.txt');
+        $robots->assertStatus(200);
+        $this->assertStringContainsString('Sitemap: ', (string) $robots->getBody());
+
+        $sitemap = $this->get('sitemap.xml');
+        $sitemap->assertStatus(200);
+        $this->assertStringContainsString('<urlset', (string) $sitemap->getBody());
+    }
 }
