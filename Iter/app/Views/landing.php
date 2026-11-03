@@ -63,37 +63,36 @@ declare(strict_types=1);
             overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
         }
 
-        main.landing { max-width: 720px; }
-        .landing section { margin-top: 40px; text-align: left; }
-        .landing h2 { font-size: 20px; margin: 0 0 12px; }
-        .landing section p { font-size: 14px; color: #444; line-height: 1.7; }
-        .features { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .features li { background: #f7f8fa; border-radius: 10px; padding: 14px 16px; font-size: 13px; color: #555; line-height: 1.6; }
-        .features strong { display: block; font-size: 14px; color: #222; margin-bottom: 2px; }
-        .faq details { border-bottom: 1px solid #e5e7eb; padding: 12px 0; }
-        .faq summary { cursor: pointer; font-weight: 600; font-size: 14px; }
-        .faq details p { margin: 8px 0 0; }
-        .landing .logo { height: 40px; margin-bottom: 16px; }
-        .landing .lead { font-size: 16px; color: #444; margin-bottom: 8px; }
-        .landing .sub { font-size: 14px; color: #777; margin-bottom: 32px; }
+        main.landing { max-width: 720px; padding: 32px 20px 56px; }
+        .hero { text-align: center; padding-bottom: 8px; }
+        .landing .logo { height: 40px; margin-bottom: 20px; }
+        .landing .lead { font-size: 22px; font-weight: 700; line-height: 1.4; color: #222; margin: 0 0 12px; }
+        .landing .sub { font-size: 15px; color: #666; line-height: 1.6; max-width: 520px; margin: 0 auto 24px; }
         .landing .btn { padding: 12px 28px; font-size: 16px; }
-        .steps {
-            list-style: none; margin: 32px 0; padding: 0;
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: left;
+        .privacy-note {
+            max-width: 520px; margin: 20px auto 0; padding: 12px 16px; border-radius: 10px;
+            background: #eef4ff; color: #3a5a9c; font-size: 13px; line-height: 1.6;
         }
+        .landing section { margin-top: 56px; text-align: left; }
+        .landing h2 { font-size: 20px; margin: 0 0 16px; }
+        .landing section p { font-size: 15px; color: #444; line-height: 1.75; margin: 0; }
+        .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .steps li { background: #f7f8fa; border-radius: 10px; padding: 16px; }
         .steps .num {
             display: inline-flex; align-items: center; justify-content: center;
             width: 22px; height: 22px; border-radius: 50%;
-            background: #1a73e8; color: #fff; font-size: 12px; font-weight: 700;
-            margin-bottom: 8px;
+            background: #1a73e8; color: #fff; font-size: 12px; font-weight: 700; margin-bottom: 8px;
         }
         .steps .title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
         .steps .desc { font-size: 13px; color: #666; line-height: 1.5; }
-        .privacy-note {
-            margin-top: 28px; padding: 14px 16px; border-radius: 10px;
-            background: #eef4ff; color: #3a5a9c; font-size: 13px; text-align: left; line-height: 1.6;
-        }
+        .features { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .features li { background: #f7f8fa; border-radius: 10px; padding: 16px; font-size: 13px; color: #555; line-height: 1.6; }
+        .features strong { display: block; font-size: 14px; color: #222; margin-bottom: 4px; }
+        .faq details { border-bottom: 1px solid #e5e7eb; padding: 14px 0; }
+        .faq details:first-of-type { border-top: 1px solid #e5e7eb; }
+        .faq summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+        .faq details p { margin-top: 8px; font-size: 14px; }
+        .legal-footer { margin-top: 56px; text-align: center; }
         @media (max-width: 520px) {
             .steps, .features { grid-template-columns: 1fr; }
         }
@@ -104,28 +103,42 @@ declare(strict_types=1);
     <?= view('partials/nav', ['uploadUrl' => $uploadUrl, 'mapUrl' => $mapUrl, 'tripsUrl' => $tripsUrl, 'logoutUrl' => $logoutUrl]) ?>
 <?php endif; ?>
     <main class="landing">
-        <img class="logo" src="/assets/logo-wordmark.png" alt="Iter">
-        <h1 class="sr-only">Iter — 사진 GPS로 그리는 여행 동선 지도</h1>
-        <p class="lead">내가 찍은 사진 속 GPS로, 여행의 동선을 지도 위에 그려드립니다.</p>
-        <p class="sub">Google Takeout에서 내보낸 사진 zip을 업로드하면, 언제 어디를 다녀왔는지 날짜별 경로로 한눈에 확인할 수 있어요.</p>
+        <header class="hero">
+            <img class="logo" src="/assets/logo-wordmark.png" alt="Iter">
+            <h1 class="sr-only">Iter — 사진 GPS로 그리는 여행 동선 지도</h1>
+            <p class="lead">내가 찍은 사진 속 GPS로, 여행의 동선을 지도 위에 그려드립니다.</p>
+            <p class="sub">Google Takeout에서 내보낸 사진 zip을 업로드하면, 언제 어디를 다녀왔는지 날짜별 경로로 한눈에 확인할 수 있어요.</p>
+            <?php if ($userId !== null): ?>
+                <a class="btn" href="<?= esc($uploadUrl, 'attr') ?>">사진 가져오기</a>
+            <?php else: ?>
+                <a class="btn" href="<?= esc($loginUrl, 'attr') ?>">Google로 로그인</a>
+            <?php endif; ?>
+            <p class="privacy-note">
+                업로드된 zip은 위치·시각 정보 추출이 끝나는 즉시 서버에서 삭제됩니다.
+                원본 사진 파일은 저장하지 않습니다.
+            </p>
+        </header>
 
-        <ol class="steps">
-            <li>
-                <span class="num">1</span>
-                <div class="title">Takeout 내보내기</div>
-                <div class="desc">Google 계정에서 사진(Google Photos)만 선택해 zip으로 내보냅니다.</div>
-            </li>
-            <li>
-                <span class="num">2</span>
-                <div class="title">zip 업로드</div>
-                <div class="desc">받은 zip 파일을 그대로 업로드하면 위치·시간을 자동으로 읽어옵니다.</div>
-            </li>
-            <li>
-                <span class="num">3</span>
-                <div class="title">동선 확인</div>
-                <div class="desc">날짜별 색으로 구분된 마커와 경로선으로 지도 위에서 동선을 확인합니다.</div>
-            </li>
-        </ol>
+        <section>
+            <h2>이용 방법</h2>
+            <ol class="steps">
+                <li>
+                    <span class="num">1</span>
+                    <div class="title">Takeout 내보내기</div>
+                    <div class="desc">Google 계정에서 사진(Google Photos)만 선택해 zip으로 내보냅니다.</div>
+                </li>
+                <li>
+                    <span class="num">2</span>
+                    <div class="title">zip 업로드</div>
+                    <div class="desc">받은 zip 파일을 그대로 업로드하면 위치·시간을 자동으로 읽어옵니다.</div>
+                </li>
+                <li>
+                    <span class="num">3</span>
+                    <div class="title">동선 확인</div>
+                    <div class="desc">날짜별 색으로 구분된 마커와 경로선으로 지도 위에서 동선을 확인합니다.</div>
+                </li>
+            </ol>
+        </section>
 
         <section>
             <h2>Iter는 어떤 서비스인가요?</h2>
@@ -148,17 +161,6 @@ declare(strict_types=1);
                 <li><strong>동선 재생</strong>썸네일 미리보기와 함께 이동 경로를 순서대로 재생해 여행을 되짚어봅니다.</li>
             </ul>
         </section>
-
-        <?php if ($userId !== null): ?>
-            <a class="btn" href="<?= esc($uploadUrl, 'attr') ?>">사진 가져오기</a>
-        <?php else: ?>
-            <a class="btn" href="<?= esc($loginUrl, 'attr') ?>">Google로 로그인</a>
-        <?php endif; ?>
-
-        <p class="privacy-note">
-            업로드된 zip은 위치·시각 정보 추출이 끝나는 즉시 서버에서 삭제됩니다.
-            원본 사진 파일은 저장하지 않습니다.
-        </p>
 
         <section class="faq">
             <h2>자주 묻는 질문</h2>
