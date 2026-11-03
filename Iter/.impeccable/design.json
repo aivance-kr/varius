@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T05:13:23.277350Z",
+  "title": "Design System: Iter",
+  "extensions": {
+    "colorMeta": {
+      "route-blue": {
+        "role": "primary",
+        "displayName": "Route Blue",
+        "canonical": "#1a73e8",
+        "tonalRamp": [
+          "oklch(25% 0.18 260)",
+          "oklch(35% 0.18 260)",
+          "oklch(45% 0.18 260)",
+          "oklch(55% 0.18 260)",
+          "oklch(65% 0.18 260)",
+          "oklch(75% 0.18 260)",
+          "oklch(85% 0.18 260)",
+          "oklch(95% 0.18 260)"
+        ]
+      },
+      "mist-surface": {
+        "role": "neutral",
+        "displayName": "Mist Surface",
+        "canonical": "#f7f8fa",
+        "tonalRamp": [
+          "oklch(25% 0.005 260)",
+          "oklch(35% 0.005 260)",
+          "oklch(45% 0.005 260)",
+          "oklch(55% 0.005 260)",
+          "oklch(65% 0.005 260)",
+          "oklch(75% 0.005 260)",
+          "oklch(85% 0.005 260)",
+          "oklch(95% 0.005 260)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "랜딩 한 줄 소개."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "서비스 설명·FAQ 답변."
+      }
+    },
+    "shadows": [
+      {
+        "name": "ambient-card",
+        "value": "0 1px 3px rgba(0,0,0,0.05)",
+        "purpose": "카드 구분용 옅은 그림자(선택)."
+      },
+      {
+        "name": "overlay",
+        "value": "0 8px 40px rgba(0,0,0,0.5)",
+        "purpose": "사진 미리보기 오버레이 전용."
+      }
+    ],
+    "motion": [
+      {
+        "name": "hover-fast",
+        "value": "background .15s, border-color .15s",
+        "purpose": "버튼 hover 전환."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "520px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "주요 행동(로그인·사진 가져오기).",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Google로 로그인</a>",
+      "css": ".ds-btn-primary{display:inline-block;padding:12px 28px;border-radius:8px;border:1.5px solid transparent;background:#1a73e8;color:#fff;font-size:16px;font-weight:600;text-decoration:none;transition:background .15s,border-color .15s}.ds-btn-primary:hover{background:#1558b0}.ds-btn-primary:focus-visible{outline:2px solid #1558b0;outline-offset:2px}"
+    },
+    {
+      "name": "Step Card",
+      "kind": "card",
+      "refersTo": "card-surface",
+      "description": "이용 방법 단계 블록.",
+      "html": "<div class=\"ds-card\"><span class=\"ds-num\">1</span><div class=\"ds-title\">Takeout 내보내기</div><div class=\"ds-desc\">Google 계정에서 사진만 선택해 zip으로 내보냅니다.</div></div>",
+      "css": ".ds-card{background:#f7f8fa;border-radius:10px;padding:16px;font-family:system-ui,sans-serif}.ds-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#1a73e8;color:#fff;font-size:12px;font-weight:700;margin-bottom:8px}.ds-title{font-size:14px;font-weight:600;margin-bottom:4px;color:#222}.ds-desc{font-size:13px;color:#666;line-height:1.5}"
+    },
+    {
+      "name": "Note Callout",
+      "kind": "custom",
+      "refersTo": "note-callout",
+      "description": "개인정보 등 안심 안내.",
+      "html": "<p class=\"ds-note\">업로드된 zip은 추출 직후 삭제됩니다.</p>",
+      "css": ".ds-note{margin:0;padding:12px 16px;border-radius:10px;background:#eef4ff;color:#3a5a9c;font:13px/1.6 system-ui,sans-serif}"
+    },
+    {
+      "name": "FAQ Item",
+      "kind": "custom",
+      "description": "접이식 질문·답변.",
+      "html": "<details class=\"ds-faq\"><summary>비용이 드나요?</summary><p>무료로 이용할 수 있습니다.</p></details>",
+      "css": ".ds-faq{border-bottom:1px solid #e5e7eb;padding:14px 0;font-family:system-ui,sans-serif}.ds-faq summary{cursor:pointer;font-weight:600;font-size:15px}.ds-faq p{margin:8px 0 0;font-size:14px;color:#444;line-height:1.75}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Travel Logbook",
+    "overview": "여행 일지처럼 읽히는 담백한 UI. 흰 바탕, 시스템 폰트, 단일 파랑 액센트, 평면 기본.",
+    "keyCharacteristics": [
+      "흰 바탕 + 단일 파랑 액센트",
+      "평면 기본",
+      "둥근 8~10px 모서리",
+      "지도·동선이 주인공"
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "파랑은 행동을 부르는 요소에만 쓴다.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "글꼴은 시스템 폰트 하나.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "깊이는 오버레이에만 준다.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do 주요 행동 요소에만 Route Blue를 쓴다.",
+      "Do 섹션 사이는 56px, 카드 사이는 12px로 리듬을 만든다."
+    ],
+    "donts": [
+      "Don't 웹폰트나 두 번째 글꼴을 추가하지 않는다.",
+      "Don't 평소 면에 그림자를 넣지 않는다."
+    ]
+  }
+}
